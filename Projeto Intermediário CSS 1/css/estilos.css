@@ -1,0 +1,138 @@
+body{
+    margin: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;   
+    background-color: rgb(236, 236, 236); 
+}
+
+#main{
+    margin: 0 auto;
+}
+
+#header{
+    background-color: orange;
+    margin: 0;
+}
+
+#title{
+    font-size: 45px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+}
+
+#Tec{
+    color: rgb(23, 23, 23);
+}
+
+#Blog{
+    color: white;
+}
+
+#nav-bar{
+    padding: 25px;
+    text-align: center;
+}
+
+.nav-opcion{
+    text-decoration: none;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.nav-opcion:hover{
+    color: orange;
+    background-color: white;
+}
+
+#content{
+    margin: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+#left-bar{
+    float: left;
+}
+
+.post{
+    width: 800px;
+    padding: 10px;
+}
+
+.title-post{
+    color: orange;
+    margin: 0;
+}
+
+.date-post{
+    margin-top: 0;
+}
+
+.img-post{
+    width: 800px;
+}
+
+.text-post{
+    color: black;
+
+}
+
+#right-bar{
+    float: right;
+    width: 300px;
+}
+
+#recent-posts{
+    margin-bottom: 50px;
+}
+
+.recent-post-title{
+    margin-bottom: 5px;
+    background-color: gray;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    text-align: center;
+    margin: 0;
+}
+
+.recent-post{
+    margin-bottom: 5px;
+}
+
+.recent-post-link{
+    color: orange;
+}
+
+.categories{
+    margin: 0;
+}
+
+.categories-title{
+    margin-bottom: 5px;
+    background-color: gray;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    text-align: center;
+    margin: 0;
+}
+
+.categorie-opcion{
+    display: block;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 17px;
+    padding: 5px;
+    background-color: orange;
+}
+
+.categorie-opcion:hover{
+    color: orange;
+    background-color: white;
+}
+
+#footer{
+    text-align: center;
+    padding: 10px;
+    background-color: #CCC;
+}
