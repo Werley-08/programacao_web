@@ -1,0 +1,33 @@
+# Diretório do IntelliJ IDEA
+.idea/
+.vscode/
+
+# Arquivos de build do IntelliJ
+*.iml
+*.ipr
+*.iws
+
+# Diretórios de saída do Java
+out/
+target/
+build/
+
+# Configurações do Maven e Gradle
+.mvn/
+.gradle/
+**/build/
+
+# Dependências baixadas pelo Maven e Gradle (caso não queira versioná-las)
+**/target/
+**/.m2/
+**/.gradle/
+
+# Arquivos de log e temporários
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
