@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="main-container">
+
+        <header id="header">
+            <div class="site-title">PADARIA DOCE SABOR</div>
+            <div class="site-decription">Sabor e qualidade em cada fatia</div>
+        </header>
+
+        <nav id="navbar">
+            <div class="navbar__item">Bolos</div>
+            <div class="navbar__item">Pães</div>
+            <div class="navbar__item">Doces</div>
+            <div class="navbar__item">Contato</div>
+        </nav>
+
+        <div id="main-content">
+
+            <div id="main-content-right">
+                <div class="main-content-title">Nossos Bolos</div>
+
+                <div class="main-content-subtitle">Bolos de Chocolate</div>
+                <div class="main-content-imagem-container"> 
+                    <img src="imagens/img-04.jpg" class="main-content-imagem">
+                </div>
+                <p class="main-content-description">Nossos bolos de chocolate são feitos com o melhor cacau belga e chocolate meio amargo. Cada camada é recheada com ganache de chocolate e coberta com uma deliciosa cobertura de chocolate. Perfeito para qualquer ocasião especial.</p>
+
+                <div class="main-content-subtitle">Bolos de Frutas</div>
+                <div class="main-content-imagem-container"> 
+                    <img src="imagens/img-02.jpg" class="main-content-imagem">
+                </div>
+                <p class="main-content-description">Nossos bolos de frutas são preparados com frutas frescas da estação. O bolo de morango é um dos mais pedidos, com camadas de massa branca, recheio de creme de baunilha e morangos frescos. Uma explosão de sabores em cada fatia.</p>
+
+                <div class="main-content-subtitle">Bolos Decorados</div>
+                <div class="main-content-imagem-container"> 
+                    <img src="imagens/img-03.jpg" class="main-content-imagem">
+                </div>
+                <p class="main-content-description">Nossa equipe de confeiteiros cria verdadeiras obras de arte em açúcar. Bolos decorados para aniversários, casamentos e eventos corporativos. Cada bolo é único e personalizado de acordo com a sua celebração.</p>
+            </div>
+
+            <div id="main-content-left">
+                <div class="main-content-title">Nossa Padaria</div>
+                <p class="main-content-description">Bem-vindo à nossa padaria artesanal! Aqui, todos os dias, preparamos pães, bolos e doces frescos usando ingredientes selecionados e técnicas tradicionais. Nossa missão é trazer o sabor autêntico da padaria para sua mesa.</p>
+
+                <div class="main-content-subtitle">Pães Especiais</div>
+                <div class="main-content-imagem-container"> 
+                    <img src="imagens/img-07.jpeg" class="main-content-imagem">
+                </div>
+                <p class="main-content-description">Nossa linha de pães especiais inclui pão de fermentação natural, pão italiano, pão de centeio e pão de nozes. Todos são assados diariamente em nosso forno a lenha, garantindo aquela crosta dourada e o miolo macio que você ama.</p>
+
+                <div class="main-content-subtitle">Doces Tradicionais</div>
+                <div class="main-content-imagem-container"> 
+                    <img src="imagens/img-01.jpg" class="main-content-imagem">
+                </div>
+                <p class="main-content-description">Nossos doces tradicionais são preparados seguindo receitas centenárias. Experimente nossos sonhos, quindins, brigadeiros gourmet e tortas de frutas. Cada doce é uma experiência única de sabor e textura.</p>
+
+                <div class="main-content-subtitle">Café da Manhã</div>
+                <div class="main-content-imagem-container"> 
+                    <img src="imagens/img-06.jpg" class="main-content-imagem">
+                </div>
+                <p class="main-content-description">Comece seu dia com o melhor café da manhã! Oferecemos uma variedade de pães frescos, croissants, muffins e bolos para acompanhar seu café ou suco. Tudo preparado com carinho para tornar seu dia mais especial.</p>
+            </div>
+        </div>
+
+        <footer id="footer">
+            <div class="footer-content">
+                <div class="footer-content-text">© 2024 Padaria Doce Sabor - Todos os direitos reservados</div>
+            </div>
+        </footer>
+        
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+    </script>
+</body>
+</html>
