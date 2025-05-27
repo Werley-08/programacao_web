@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questão 1</title>
+</head>
+
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+        margin: 0;
+        padding: 0;
+        
+    }
+
+    header {
+        padding: 40px;
+        background-color: aquamarine;
+        text-align: center;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    #main-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    nav {
+        flex: 30%;
+        background-color: #202020;
+        color: white;
+        padding: 20px;
+        width: 100%;
+    }
+    
+    .navbar-item {
+        background-color: #202020;
+        color: white;
+        list-style: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .navbar-item:hover {
+        background-color: white;
+        color: #202020;
+    }
+
+    main {
+        flex: 70%;
+        margin: 10px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+
+    .imagem {
+        width: 100%;
+        height: 100px;
+        margin: 10px;
+        background-color: #cacaca;
+        font-size: 8px;
+        padding: 10px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #c0c0c0;
+        font-size: 12px;
+    }
+
+    @media (max-width: 400px) {
+    #main-container {
+      flex-direction: column;
+    }
+  }
+
+</style>
+
+<body>
+
+    <header> Desenvolvimento de Software para WEB </header>
+
+    <div id="main-container">
+        <nav>
+            <div id="navbar-title"> [Menu Lateral] </div>
+                <div class="navbar-item" >LINK 1</div>
+                <div class="navbar-item" >LINK 2</div>
+                <div class="navbar-item" >LINK 3</div>
+                <div class="navbar-item" >LINK 4</div>
+        </nav>
+
+        <main>
+            <section>
+                <h2>[Conteúdo]</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in justo at libero suscipit varius.</p>
+                <div class="imagem">imagem</div>
+                <p>Curabitur efficitur velit nec lorem consectetur, id hendrerit nunc maximus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima alias dignissimos non, architecto voluptates molestiae quis sint officia ratione in veniam iste quod voluptatem cum deserunt consequuntur dolor, praesentium debitis!</p>
+                <div class="imagem">imagem</div>
+                <p>Curabitur efficitur velit nec lorem consectetur, id hendrerit nunc maximus.</p>
+            </section>
+
+            <article>
+                <h2>Introdução ao HTML</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in justo at libero suscipit varius.</p>
+                <div class="imagem">imagem</div>
+                <p>Curabitur efficitur velit nec lorem consectetur, id hendrerit nunc maximus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed iste ipsam laboriosam vel nihil! Facilis autem odio sint magni distinctio adipisci, deleniti mollitia atque aliquam nostrum doloremque dolorum. Explicabo, iure.</p>
+                <div class="imagem">imagem</div>
+                <p>Curabitur efficitur velit nec lorem consectetur, id hendrerit nunc maximus. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque fugiat at pariatur ullam non facilis iusto quae molestiae sequi alias eligendi, animi quos molestias earum delectus natus fugit voluptatum voluptatibus?</p>
+            </article>
+        </main>
+    </div>
+
+    <footer>
+        <strong> Todos os direitos reservados </strong>  
+    </footer>
+    
+</body>
+</html>
