@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Alunos</title>
+  <style>
+    table { border-collapse: collapse; width: 60%; margin: 20px auto; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center">Alunos</h2>
+  <table id="tabela-alunos">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Idade</th>
+        <th>Curso</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  <script>
+    fetch('http://localhost:3001/alunos')
+      .then(res => res.json())
+      .then(alunos => {
+        const tbody = document.querySelector('#tabela-alunos tbody');
+        alunos.forEach(aluno => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${aluno.id}</td>
+            <td>${aluno.nome}</td>
+            <td>${aluno.idade}</td>
+            <td>${aluno.curso}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(err => {
+        const tbody = document.querySelector('#tabela-alunos tbody');
+        tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar alunos</td></tr>';
+      });
+  </script>
+</body>
+</html>
