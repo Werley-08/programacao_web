@@ -12,6 +12,14 @@
 </head>
 <body>
   <h2 style="text-align:center">Alunos</h2>
+  <form id="form-aluno" style="width:60%;margin:20px auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <input type="hidden" id="aluno-id">
+    <input type="text" id="aluno-nome" placeholder="Nome" required>
+    <input type="number" id="aluno-idade" placeholder="Idade" required min="1">
+    <input type="text" id="aluno-curso" placeholder="Curso" required>
+    <button type="submit" id="btn-salvar">Adicionar</button>
+    <button type="button" id="btn-cancelar" style="display:none">Cancelar edição</button>
+  </form>
   <table id="tabela-alunos">
     <thead>
       <tr>
@@ -19,6 +27,7 @@
         <th>Nome</th>
         <th>Idade</th>
         <th>Curso</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -26,25 +35,105 @@
     </tbody>
   </table>
   <script>
-    fetch('http://localhost:3001/alunos')
-      .then(res => res.json())
-      .then(alunos => {
-        const tbody = document.querySelector('#tabela-alunos tbody');
-        alunos.forEach(aluno => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${aluno.id}</td>
-            <td>${aluno.nome}</td>
-            <td>${aluno.idade}</td>
-            <td>${aluno.curso}</td>
-          `;
-          tbody.appendChild(tr);
+    function carregarAlunos() {
+      fetch('http://localhost:3001/alunos')
+        .then(res => res.json())
+        .then(alunos => {
+          const tbody = document.querySelector('#tabela-alunos tbody');
+          tbody.innerHTML = '';
+          alunos.forEach(aluno => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${aluno.id}</td>
+              <td>${aluno.nome}</td>
+              <td>${aluno.idade}</td>
+              <td>${aluno.curso}</td>
+              <td>
+                <button onclick="editarAluno(${aluno.id}, '${aluno.nome}', ${aluno.idade}, '${aluno.curso}')">Editar</button>
+                <button onclick="deletarAluno(${aluno.id})">Excluir</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => {
+          const tbody = document.querySelector('#tabela-alunos tbody');
+          tbody.innerHTML = '<tr><td colspan="5">Erro ao carregar alunos</td></tr>';
         });
-      })
-      .catch(err => {
-        const tbody = document.querySelector('#tabela-alunos tbody');
-        tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar alunos</td></tr>';
-      });
+    }
+
+    carregarAlunos();
+
+    document.getElementById('form-aluno').onsubmit = function(e) {
+      e.preventDefault();
+      const id = document.getElementById('aluno-id').value;
+      const nome = document.getElementById('aluno-nome').value;
+      const idade = document.getElementById('aluno-idade').value;
+      const curso = document.getElementById('aluno-curso').value;
+      const aluno = { nome, idade, curso };
+      if (id) {
+        // UPDATE
+        fetch(`http://localhost:3001/alunos/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(aluno)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Erro ao atualizar');
+          return res.json();
+        })
+        .then(() => {
+          this.reset();
+          document.getElementById('btn-salvar').textContent = 'Adicionar';
+          document.getElementById('btn-cancelar').style.display = 'none';
+          carregarAlunos();
+        })
+        .catch(alert);
+      } else {
+        // CREATE
+        fetch('http://localhost:3001/alunos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(aluno)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Erro ao adicionar');
+          return res.json();
+        })
+        .then(() => {
+          this.reset();
+          carregarAlunos();
+        })
+        .catch(alert);
+      }
+    };
+
+    window.editarAluno = function(id, nome, idade, curso) {
+      document.getElementById('aluno-id').value = id;
+      document.getElementById('aluno-nome').value = nome;
+      document.getElementById('aluno-idade').value = idade;
+      document.getElementById('aluno-curso').value = curso;
+      document.getElementById('btn-salvar').textContent = 'Salvar';
+      document.getElementById('btn-cancelar').style.display = 'inline';
+    };
+
+    document.getElementById('btn-cancelar').onclick = function() {
+      document.getElementById('form-aluno').reset();
+      document.getElementById('aluno-id').value = '';
+      document.getElementById('btn-salvar').textContent = 'Adicionar';
+      this.style.display = 'none';
+    };
+
+    window.deletarAluno = function(id) {
+      if (confirm('Tem certeza que deseja excluir este aluno?')) {
+        fetch(`http://localhost:3001/alunos/${id}`, { method: 'DELETE' })
+          .then(res => {
+            if (!res.ok) throw new Error('Erro ao excluir');
+            carregarAlunos();
+          })
+          .catch(alert);
+      }
+    };
   </script>
 </body>
 </html>
