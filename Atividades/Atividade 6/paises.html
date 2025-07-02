@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 - Países</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .brasil {
+            background-color: #ffe082;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>COVID-19 - Dados por País</h1>
+    <table id="covid-table-paises">
+        <thead>
+            <tr>
+                <th>País</th>
+                <th>Casos Confirmados</th>
+                <th>Número de Falecimentos</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dados serão inseridos aqui -->
+        </tbody>
+    </table>
+    <script>
+        async function fetchCovidCountries() {
+            const res = await fetch('https://covid19-brazil-api.vercel.app/api/report/v1/countries');
+            const data = await res.json();
+            return data.data;
+        }
+
+        function formatarNumero(num) {
+            return num ? num.toLocaleString('pt-BR') : '-';
+        }
+
+        function preencherTabelaPaises(paises) {
+            const tbody = document.querySelector('#covid-table-paises tbody');
+            tbody.innerHTML = '';
+            paises.forEach(pais => {
+                const isBrasil = pais.country.toLowerCase() === 'brazil' || pais.country.toLowerCase() === 'brasil';
+                tbody.innerHTML += `
+                    <tr class="${isBrasil ? 'brasil' : ''}">
+                        <td>${pais.country}</td>
+                        <td>${formatarNumero(pais.confirmed)}</td>
+                        <td>${formatarNumero(pais.deaths)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        fetchCovidCountries().then(preencherTabelaPaises);
+    </script>
+</body>
+</html> 

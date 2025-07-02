@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Brasil - Estados</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .acima-media {
+            background-color: #ffdddd;
+        }
+        .maior-relacao {
+            background-color: #d4edda;
+            font-weight: bold;
+        }
+        .menor-relacao {
+            background-color: #d1ecf1;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>COVID-19 - Dados por Estado (Brasil)</h1>
+    <table id="covid-table">
+        <thead>
+            <tr>
+                <th>Nome do Estado</th>
+                <th>Abreviação</th>
+                <th>Número de Casos</th>
+                <th>Número de Suspeitos</th>
+                <th>Número de Falecimentos</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dados serão inseridos aqui -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"><strong>Médias</strong></td>
+                <td id="media-casos"></td>
+                <td id="media-suspeitos"></td>
+                <td id="media-falecimentos"></td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="relacoes" style="margin-top: 20px;"></div>
+    <script>
+        async function fetchCovidStates() {
+            const res = await fetch('https://covid19-brazil-api.vercel.app/api/report/v1');
+            const data = await res.json();
+            return data.data;
+        }
+
+        function calcularMedia(arr, key) {
+            return arr.reduce((acc, cur) => acc + (cur[key] || 0), 0) / arr.length;
+        }
+
+        function formatarNumero(num) {
+            return num.toLocaleString('pt-BR');
+        }
+
+        function preencherTabela(estados) {
+            const tbody = document.querySelector('#covid-table tbody');
+            tbody.innerHTML = '';
+
+            const mediaCasos = calcularMedia(estados, 'cases');
+            const mediaSuspeitos = calcularMedia(estados, 'suspects');
+            const mediaFalecimentos = calcularMedia(estados, 'deaths');
+
+            // Calcular relação casos/falecimentos
+            let maiorRelacao = -Infinity, menorRelacao = Infinity;
+            let idxMaior = -1, idxMenor = -1;
+            estados.forEach((estado, idx) => {
+                const rel = estado.deaths ? estado.cases / estado.deaths : 0;
+                if (rel > maiorRelacao) {
+                    maiorRelacao = rel;
+                    idxMaior = idx;
+                }
+                if (rel < menorRelacao && estado.deaths > 0) {
+                    menorRelacao = rel;
+                    idxMenor = idx;
+                }
+            });
+
+            estados.forEach((estado, idx) => {
+                const acimaMediaFalecimentos = estado.deaths > mediaFalecimentos;
+                const rel = estado.deaths ? estado.cases / estado.deaths : 0;
+                let trClass = '';
+                if (idx === idxMaior) trClass = 'maior-relacao';
+                else if (idx === idxMenor) trClass = 'menor-relacao';
+                else if (acimaMediaFalecimentos) trClass = 'acima-media';
+                tbody.innerHTML += `
+                    <tr class="${trClass}">
+                        <td>${estado.state}</td>
+                        <td>${estado.uf}</td>
+                        <td>${formatarNumero(estado.cases)}</td>
+                        <td>${formatarNumero(estado.suspects)}</td>
+                        <td>${formatarNumero(estado.deaths)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('media-casos').textContent = formatarNumero(mediaCasos.toFixed(0));
+            document.getElementById('media-suspeitos').textContent = formatarNumero(mediaSuspeitos.toFixed(0));
+            document.getElementById('media-falecimentos').textContent = formatarNumero(mediaFalecimentos.toFixed(0));
+
+            // Relações
+            const relacoesDiv = document.getElementById('relacoes');
+            relacoesDiv.innerHTML = `
+                <p><strong>Maior relação Casos/Falecimentos:</strong> ${estados[idxMaior].state} (${maiorRelacao.toFixed(2)})</p>
+                <p><strong>Menor relação Casos/Falecimentos:</strong> ${estados[idxMenor].state} (${menorRelacao.toFixed(2)})</p>
+            `;
+        }
+
+        fetchCovidStates().then(preencherTabela);
+    </script>
+</body>
+</html>
