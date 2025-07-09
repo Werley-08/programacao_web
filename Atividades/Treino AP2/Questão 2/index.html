@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .score, .moves {
+            background: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 7px;
+        }
+
+        .card-front {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-size: 2em;
+        }
+
+        .card-back {
+            background: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-back img {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .card.matched {
+            border-color: #4CAF50;
+            background: #E8F5E8;
+        }
+
+        .card.matched .card-back {
+            background: #E8F5E8;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .win-message h2 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .win-message p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Jogo da Memória</h1>
+        
+        <div class="info">
+            <div class="score">Pontuação: <span id="score">0</span></div>
+            <div class="moves">Jogadas: <span id="moves">0</span></div>
+        </div>
+
+        <div class="memory-game" id="gameBoard">
+            <!-- Cards serão gerados dinamicamente -->
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">🔄 Novo Jogo</button>
+    </div>
+
+    <div class="win-message" id="winMessage">
+        <h2>🎉 Parabéns!</h2>
+        <p>Você completou o jogo em <span id="finalMoves">0</span> jogadas!</p>
+        <p>Pontuação final: <span id="finalScore">0</span></p>
+        <button class="reset-btn" onclick="resetGame()">Jogar Novamente</button>
+    </div>
+
+    <script>
+        // Array com as imagens de gatos (8 pares = 16 cartas)
+        const images = [
+            'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&h=200&fit=crop',
+            'https://images.unsplash.com/photo-1557246565-8a3d3ab5d7f6?w=200&h=200&fit=crop'
+        ];
+
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let score = 0;
+        let moves = 0;
+        let canFlip = true;
+
+        // Função para criar o tabuleiro
+        function createBoard() {
+            const gameBoard = document.getElementById('gameBoard');
+            gameBoard.innerHTML = '';
+
+            // Duplicar as imagens para criar pares
+            const gameImages = [...images, ...images];
+            
+            // Embaralhar as imagens
+            for (let i = gameImages.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [gameImages[i], gameImages[j]] = [gameImages[j], gameImages[i]];
+            }
+
+            // Criar as cartas
+            gameImages.forEach((image, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.index = index;
+                card.dataset.image = image;
+                
+                card.innerHTML = `
+                    <div class="card-front">❓</div>
+                    <div class="card-back"><img src="${image}" alt="Gato"></div>
+                `;
+                
+                card.addEventListener('click', () => flipCard(card));
+                gameBoard.appendChild(card);
+                cards.push(card);
+            });
+        }
+
+        // Função para virar uma carta
+        function flipCard(card) {
+            if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                return;
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('moves').textContent = moves;
+                canFlip = false;
+                checkMatch();
+            }
+        }
+
+        // Função para verificar se as cartas são iguais
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const image1 = card1.dataset.image;
+            const image2 = card2.dataset.image;
+
+            if (image1 === image2) {
+                // Match encontrado
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                score += 10;
+                document.getElementById('score').textContent = score;
+                
+                flippedCards = [];
+                canFlip = true;
+
+                // Verificar se o jogo acabou
+                if (matchedPairs === images.length) {
+                    setTimeout(showWinMessage, 500);
+                }
+            } else {
+                // Não é match
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                    canFlip = true;
+                }, 1000);
+            }
+        }
+
+        // Função para mostrar mensagem de vitória
+        function showWinMessage() {
+            document.getElementById('finalMoves').textContent = moves;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('winMessage').style.display = 'block';
+        }
+
+        // Função para resetar o jogo
+        function resetGame() {
+            cards = [];
+            flippedCards = [];
+            matchedPairs = 0;
+            score = 0;
+            moves = 0;
+            canFlip = true;
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('moves').textContent = moves;
+            document.getElementById('winMessage').style.display = 'none';
+            
+            createBoard();
+        }
+
+        // Inicializar o jogo
+        createBoard();
+    </script>
+</body>
+</html>
